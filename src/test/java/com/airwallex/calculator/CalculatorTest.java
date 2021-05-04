@@ -134,4 +134,18 @@ public class CalculatorTest {
         assertEquals(new BigDecimal(5), cal.operands.pop());
 
     }
+
+    @Test
+    public void undoWithSameResultOperand() {
+        Calculator cal = new Calculator();
+        cal.store(new BigDecimal(1));
+        cal.store(new BigDecimal(10));
+        cal.mul();
+        cal.undo();
+
+        assertEquals(2, cal.operands.size());
+        assertEquals(new BigDecimal(10), cal.operands.pop());
+        assertEquals(new BigDecimal(1), cal.operands.pop());
+
+    }
 }

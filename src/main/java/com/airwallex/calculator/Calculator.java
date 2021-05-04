@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * calculator to run the supported operators on stored operands
@@ -30,6 +29,9 @@ public class Calculator {
     //the position of the operator in the input line.
     private int curOperatorPos;
 
+    //used to separate from a result(1*10)  and 10
+    private static final String PREFIX_RESULT = "result:";
+
     public Calculator() {
         operators = new HashMap<>();
         operators.put(ValidOperators.ADD, this::add);
@@ -52,7 +54,7 @@ public class Calculator {
         operands.push(val);
         //for case: 5 1 4 + undo undo undo undo
         //store the value also in archived_operands to know what to pop
-        archived_operands.push(val.toString());
+        archived_operands.push(PREFIX_RESULT+val.toString());
     }
 
     /**
@@ -83,7 +85,7 @@ public class Calculator {
             operands.push(result);
             //to undo, pushed result first in the archived_operands stack
             //which will stop the undo operation when it is the same with the top of the operator stack
-            archived_operands.push(result.toString());
+            archived_operands.push(PREFIX_RESULT+result.toString());
             archived_operands.push(operand2.toString());
             archived_operands.push(operand1.toString());
 
@@ -108,7 +110,7 @@ public class Calculator {
             operands.push(result);
             //to undo, pushed result first in the archived_operands stack
             //which will stop the undo operation when it is the same with the top of the operator stack
-            archived_operands.push(result.toString());
+            archived_operands.push(PREFIX_RESULT+result.toString());
             archived_operands.push(operand2.toString());
             archived_operands.push(operand1.toString());
 
@@ -133,7 +135,7 @@ public class Calculator {
             operands.push(result);
             //to undo, pushed result first in the archived_operands stack
             //which will stop the undo operation when it is the same with the top of the operator stack
-            archived_operands.push(result.toString());
+            archived_operands.push(PREFIX_RESULT+result.toString());
             archived_operands.push(operand2.toString());
             archived_operands.push(operand1.toString());
 
@@ -157,7 +159,7 @@ public class Calculator {
             operands.push(result);
             //to undo, pushed result first in the archived_operands stack
             //which will stop the undo operation when it is the same with the top of the operator stack
-            archived_operands.push(result.toString());
+            archived_operands.push(PREFIX_RESULT+result.toString());
             archived_operands.push(operand2.toString());
             archived_operands.push(operand1.toString());
         } catch (EmptyStackException e) {
@@ -178,7 +180,7 @@ public class Calculator {
             operands.push(result);
             //to undo, pushed result first in the archived_operands stack
             //which will stop the undo operation when it is the same with the top of the operator stack
-            archived_operands.push(result.toString());
+            archived_operands.push(PREFIX_RESULT+result.toString());
             archived_operands.push(operand.toString());
         } catch (Exception e) {
             handleEmptyStackException(ValidOperators.SQRT, operand, null);
@@ -212,7 +214,7 @@ public class Calculator {
         } else { // non-clear case
             BigDecimal top = operands.pop();
             while (!archived_operands.isEmpty() //dump all involved elements from last operation back to stack
-                    && !archived_operands.peek().equals(top.toString())) {
+                    && !archived_operands.peek().equals(PREFIX_RESULT+top.toString())) {
                 operands.push(new BigDecimal(archived_operands.pop()));
             }
         }
